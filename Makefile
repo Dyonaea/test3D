@@ -1,7 +1,7 @@
 CC := g++
 CFLAGS = -std=c++17 -g -Wall -Wextra -Wpedantic -Wstrict-aliasing
 CFLAGS += -I./lib/include
-LDFLAGS = -lm -lglfw -lGL  # Link math, GLFW, dynamic linking, and OpenGL
+LDFLAGS = -lm -lglfw -lGL
 
 SRC := $(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp) src/util/glad.c
 BIN := bin
