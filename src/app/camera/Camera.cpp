@@ -47,45 +47,50 @@ void Camera::inputs(GLFWwindow *window){
 
 
 
-static double lastMouseX = width / 2;
-static double lastMouseY = height / 2;
+if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	{
+		// Hides mouse cursor
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-// Get the current cursor position
-double mouseX, mouseY;
-glfwGetCursorPos(window, &mouseX, &mouseY);
+		// Prevents camera from jumping on the first click
+		if (firstClick)
+		{
+			glfwSetCursorPos(window, (width / 2), (height / 2));
+			firstClick = false;
+		}
 
-// Calculate the mouse movement
-float deltaX = static_cast<float>(mouseX - lastMouseX);
-float deltaY = static_cast<float>(mouseY - lastMouseY);
+		// Stores the coordinates of the cursor
+		double mouseX;
+		double mouseY;
+		// Fetches the coordinates of the cursor
+		glfwGetCursorPos(window, &mouseX, &mouseY);
 
-// Update the last mouse position for the next frame
-lastMouseX = mouseX;
-lastMouseY = mouseY;
+		// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
+		// and then "transforms" them into degrees 
+		float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
+		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
 
-// Sensitivity can be adjusted based on your preferences
-float rotX = sensitivity * deltaY / height; // Vertical rotation
-float rotY = sensitivity * deltaX / width;  // Horizontal rotation
+		// Calculates upcoming vertical change in the Orientation
+		glm::vec3 newOrientation = glm::rotate(orientation, glm::radians(-rotX), glm::normalize(glm::cross(orientation, up)));
 
-if (deltaX != 0 || deltaY != 0) {
-    // Compute the right vector based on the current orientation
-    glm::vec3 right = glm::normalize(glm::cross(orientation, up));
+		// Decides whether or not the next vertical Orientation is legal or not
+		if (abs(glm::angle(newOrientation, up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+		{
+			orientation = newOrientation;
+		}
 
-    // Rotate around the right vector for vertical movement
-    glm::vec3 newOrientation = glm::rotate(orientation, glm::radians(-rotX), right);
+		// Rotates the Orientation left and right
+		orientation = glm::rotate(orientation, glm::radians(-rotY), up);
 
-    // Limit vertical rotation
-    float maxVerticalAngle = glm::radians(85.0f);
-    float angle = glm::angle(newOrientation, up);
-    if (angle <= maxVerticalAngle || angle >= (3.14159f - maxVerticalAngle)) {
-        orientation = newOrientation;
-    }
-
-    // Rotate around the up vector for horizontal movement
-    orientation = glm::rotate(orientation, glm::radians(-rotY), up);
-}
-
-// Reset the cursor to the center after processing movement
-glfwSetCursorPos(window, width / 2, height / 2);
-
+		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
+		glfwSetCursorPos(window, (width / 2), (height / 2));
+	}
+	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+	{
+		// Unhides cursor since camera is not looking around anymore
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		// Makes sure the next time the camera looks around it doesn't jump
+		firstClick = true;
+	}
 }
 
