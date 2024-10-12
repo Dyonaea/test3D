@@ -47,30 +47,41 @@ void Camera::inputs(GLFWwindow *window){
 
 
 
-    double mouseX, mouseY;
+double mouseX, mouseY;
+static double lastMouseX = width / 2;
+static double lastMouseY = height / 2;
+
 glfwGetCursorPos(window, &mouseX, &mouseY);
 
-float deltaX = static_cast<float>(mouseX - (width / 2));
-float deltaY = static_cast<float>(mouseY - (height / 2));
+float deltaX = static_cast<float>(mouseX - lastMouseX);
+float deltaY = static_cast<float>(mouseY - lastMouseY);
+
+// Update the last mouse position
+lastMouseX = mouseX;
+lastMouseY = mouseY;
 
 if (deltaX != 0 || deltaY != 0) {
     float rotX = sensitivity * deltaY / height;
     float rotY = sensitivity * deltaX / width;
 
+    // Compute the right vector based on the current orientation
     glm::vec3 right = glm::normalize(glm::cross(orientation, up));
 
+    // Apply rotation around the right vector
     glm::vec3 newOrientation = glm::rotate(orientation, glm::radians(-rotX), right);
 
+    // Limit vertical rotation
     float maxVerticalAngle = glm::radians(85.0f);
     if (glm::abs(glm::angle(newOrientation, up) - glm::radians(90.0f)) <= maxVerticalAngle) {
         orientation = newOrientation;
     }
 
+    // Apply horizontal rotation around the up vector
     orientation = glm::rotate(orientation, glm::radians(-rotY), up);
 }
 
-    // Now reset the cursor to the center after processing movement
-    glfwSetCursorPos(window, width / 2, height / 2);
+// Now reset the cursor to the center after processing movement
+glfwSetCursorPos(window, width / 2, height / 2);
 
 }
 

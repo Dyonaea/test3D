@@ -9,7 +9,6 @@ BIN := bin
 
 OBJ_DIRS := $(sort $(dir $(OBJ)))
 
-# Add a variable for dependency files
 DEP := $(OBJ:.o=.d)
 
 .PHONY: all clean run dirs game lib
@@ -36,7 +35,6 @@ lib:
 	cd lib/glm && mkdir -p build && cd build && cmake .. && make 
 	cd lib/glfw && mkdir -p build && cd build && cmake .. && make 
 
-# Include the dependency files
 -include $(DEP)
 
 clean:
