@@ -45,37 +45,43 @@ void Camera::inputs(GLFWwindow *window){
         speed = 0.01f;
     }
 
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-        if (firstClick) {
-            glfwSetCursorPos(window, width / 2, height / 2);
-            firstClick = false;
-        }
+if (firstClick) {
+    glfwSetCursorPos(window, width / 2, height / 2);
+    firstClick = false;
+}
 
-        double mouseX, mouseY;
-        glfwGetCursorPos(window, &mouseX, &mouseY);
+// Get the current mouse position
+double mouseX, mouseY;
+glfwGetCursorPos(window, &mouseX, &mouseY);
 
-        glfwSetCursorPos(window, width / 2, height / 2);
+// Calculate the difference in mouse movement
+float deltaX = static_cast<float>(mouseX - width / 2);
+float deltaY = static_cast<float>(mouseY - height / 2);
 
-        float deltaX = static_cast<float>(mouseX - width / 2);
-        float deltaY = static_cast<float>(mouseY - height / 2);
+// Only move the camera if there was movement
+if (deltaX != 0 || deltaY != 0) {
+    // Apply sensitivity to the movement
+    float rotX = sensitivity * deltaY / height;
+    float rotY = sensitivity * deltaX / width;
 
-        float rotX = sensitivity * deltaY / height;
-        float rotY = sensitivity * deltaX / width;
+    // Calculate the right vector for vertical rotation
+    glm::vec3 right = glm::normalize(glm::cross(orientation, up));
 
-        glm::vec3 right = glm::normalize(glm::cross(orientation, up));
-        glm::vec3 newOrientation = glm::rotate(orientation, glm::radians(-rotX), right);
+    // Rotate the orientation based on vertical movement
+    glm::vec3 newOrientation = glm::rotate(orientation, glm::radians(-rotX), right);
 
-        float maxVerticalAngle = glm::radians(85.0f);
-        if (glm::abs(glm::angle(newOrientation, up) - glm::radians(90.0f)) <= maxVerticalAngle) {
-            orientation = newOrientation;
-        }
-
-        orientation = glm::rotate(orientation, glm::radians(-rotY), up);
+    // Limit vertical rotation to avoid gimbal lock
+    float maxVerticalAngle = glm::radians(85.0f);
+    if (glm::abs(glm::angle(newOrientation, up) - glm::radians(90.0f)) <= maxVerticalAngle) {
+        orientation = newOrientation;
     }
-    else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        firstClick = true;
-    }
+
+    // Rotate the orientation based on horizontal movement
+    orientation = glm::rotate(orientation, glm::radians(-rotY), up);
+
+    // Reset the cursor to the center of the window after each movement
+    glfwSetCursorPos(window, width / 2, height / 2);
+}
 }

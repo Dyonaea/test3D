@@ -47,6 +47,12 @@ void App::fpsCount(){
         ss << "x) -FPS: " << std::to_string(nbFrames); 
         glfwSetWindowTitle(window, ss.str().c_str());
         std::cout<<nbFrames<<std::endl;
+        std::cout<<"px: "<<player->position.x<<std::endl;
+        std::cout<<"py: "<<player->position.y<<std::endl;
+        std::cout<<"pz: "<<player->position.z<<std::endl;
+        if(Physics::AABB(player->posMin+player->position, player->posMax+player->position, test->posMin+test->position, test->posMax+test->position)){
+        std::cout<<"collide"<<std::endl;
+    }
         nbFrames = 0;
         lastFrame += 1.0f;
     }
@@ -56,6 +62,7 @@ void App::update(){
     fpsCount();
     glfwPollEvents();
     player->update();
+    
 }
 void App::render(){
 

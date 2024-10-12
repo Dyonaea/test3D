@@ -6,6 +6,7 @@
 #include "../test/Test.h"
 #include "./camera/Camera.h"
 #include "../player/Player.h"
+#include "../physics/Physics.h"
 
 class App{
     private:
