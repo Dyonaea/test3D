@@ -1,7 +1,7 @@
 CC := g++
 CFLAGS = -std=c++17 -g -Wall -Wextra -Wpedantic -Wstrict-aliasing
 CFLAGS += -I./lib/include
-LDFLAGS = -lm -lglfw -lGL
+LDFLAGS =  -lm -lglfw -lGL
 
 SRC := $(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp) src/util/glad.c
 OBJ := $(patsubst src/%.cpp, obj/%.o, $(SRC:.c=.o))
@@ -10,7 +10,7 @@ BIN := bin
 
 OBJ_DIRS := $(sort $(dir $(OBJ)))
 
-.PHONY: all clean run dirs game
+.PHONY: all clean run dirs game lib
 
 all: dirs game
 
