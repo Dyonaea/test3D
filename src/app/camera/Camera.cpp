@@ -48,20 +48,16 @@ void Camera::inputs(GLFWwindow *window){
 
 
     double mouseX, mouseY;
-    glfwGetCursorPos(window, &mouseX, &mouseY);
-    glfwSetCursorPos(window, width / 2, height / 2);
+glfwGetCursorPos(window, &mouseX, &mouseY);
 
-    float deltaX = static_cast<float>(mouseX - (width / 2));
-    float deltaY = static_cast<float>(mouseY - (height / 2));
+float deltaX = static_cast<float>(mouseX - (width / 2));
+float deltaY = static_cast<float>(mouseY - (height / 2));
 
 if (deltaX != 0 || deltaY != 0) {
-    
     float rotX = sensitivity * deltaY / height;
     float rotY = sensitivity * deltaX / width;
 
-
     glm::vec3 right = glm::normalize(glm::cross(orientation, up));
-
 
     glm::vec3 newOrientation = glm::rotate(orientation, glm::radians(-rotX), right);
 
@@ -71,6 +67,10 @@ if (deltaX != 0 || deltaY != 0) {
     }
 
     orientation = glm::rotate(orientation, glm::radians(-rotY), up);
+}
+
+    // Now reset the cursor to the center after processing movement
+    glfwSetCursorPos(window, width / 2, height / 2);
 
 }
-}
+
