@@ -28,6 +28,13 @@ void App::initWindow(){
     exit(EXIT_FAILURE);
     }
     glViewport(0, 0, 1000, 1000);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwFocusWindow(window);
+
+    
+    // glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+   
+
     
 }
 
@@ -47,9 +54,10 @@ void App::fpsCount(){
         ss << "x) -FPS: " << std::to_string(nbFrames); 
         glfwSetWindowTitle(window, ss.str().c_str());
         std::cout<<nbFrames<<std::endl;
-        std::cout<<"px: "<<player->position.x<<std::endl;
-        std::cout<<"py: "<<player->position.y<<std::endl;
-        std::cout<<"pz: "<<player->position.z<<std::endl;
+        int cursorMode = glfwGetInputMode(window, GLFW_CURSOR);
+        if (cursorMode == GLFW_CURSOR_DISABLED) {
+            std::cout << "Cursor is disabled." << std::endl;
+        }
         if(Physics::AABB(player->posMin+player->position, player->posMax+player->position, test->posMin+test->position, test->posMax+test->position)){
         std::cout<<"collide"<<std::endl;
     }
@@ -59,8 +67,8 @@ void App::fpsCount(){
 }
 
 void App::update(){
-    fpsCount();
     glfwPollEvents();
+    fpsCount();
     player->update();
     
 }
