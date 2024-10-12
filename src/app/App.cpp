@@ -34,8 +34,7 @@ void App::init(){
     initWindow();
     shader = new Shader("./src/app/shader/default.vert", "./src/app/shader/default.frag");
     test = new Test();
-    
-    camera = new Camera(1000, 1000, glm::vec3(0.0f, 0.0f, 2.0f));
+    player = new Player();
 }
 
 void App::fpsCount(){
@@ -53,6 +52,7 @@ void App::fpsCount(){
 void App::update(){
     fpsCount();
     glfwPollEvents();
+    player->update();
 }
 void App::render(){
 
@@ -62,8 +62,7 @@ void App::render(){
    
 
     shader->use();
-    camera->inputs(window);
-    camera->Matrix(45.0f, 0.1f, 100.0f, shader, "camMatrix");
+    player->render();
 
     test->render();
     glfwSwapBuffers(window);
@@ -77,7 +76,6 @@ App::App(){
 App::~App(){
     terminate();
     delete test;
-    delete camera;
 }
 
 void App::terminate(){

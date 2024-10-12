@@ -5,6 +5,7 @@
 #include "shader/shader.h"
 #include "../test/Test.h"
 #include "./camera/Camera.h"
+#include "../player/Player.h"
 
 class App{
     private:
@@ -15,6 +16,7 @@ class App{
 
         Camera* camera;
         Test* test;
+        Player* player;
 
         void init();
         void initWindow();
