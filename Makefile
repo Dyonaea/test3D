@@ -1,7 +1,7 @@
 CC := g++
-CFLAGS = -std=c++17 -g -Wall -Wextra -Wpedantic -Wstrict-aliasing
-CFLAGS += -I./lib/include
-LDFLAGS =  -lm -lglfw -lGL
+CFLAGS = -std=c++17 -O2 -Wall -Wextra -Wpedantic -Wstrict-aliasing
+CFLAGS += -I./lib/include -I./lib/glfw/include -I./lib/glm
+LDFLAGS = -L./lib/glfw/build/src -L./lib/glm/build/glm -lglfw3 -lm -lGL
 
 SRC := $(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp) src/util/glad.c
 OBJ := $(patsubst src/%.cpp, obj/%.o, $(SRC:.c=.o))

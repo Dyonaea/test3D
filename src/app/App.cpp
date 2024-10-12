@@ -21,12 +21,14 @@ void App::initWindow(){
         this->terminate();
     }
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(0);
     if (!gladLoadGL()) {
     std::cerr << "Failed to initialize GLAD!" << std::endl;
     this->terminate();
     exit(EXIT_FAILURE);
     }
     glViewport(0, 0, 1000, 1000);
+    
 }
 
 
@@ -44,6 +46,7 @@ void App::fpsCount(){
         std::stringstream ss;
         ss << "x) -FPS: " << std::to_string(nbFrames); 
         glfwSetWindowTitle(window, ss.str().c_str());
+        std::cout<<nbFrames<<std::endl;
         nbFrames = 0;
         lastFrame += 1.0f;
     }
