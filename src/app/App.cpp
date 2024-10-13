@@ -53,7 +53,7 @@ void App::fpsCount(){
         std::stringstream ss;
         ss << "x) -FPS: " << std::to_string(nbFrames); 
         glfwSetWindowTitle(window, ss.str().c_str());
-        std::cout<<nbFrames<<std::endl;
+        // std::cout<<nbFrames<<std::endl;
         int cursorMode = glfwGetInputMode(window, GLFW_CURSOR);
         if (cursorMode == GLFW_CURSOR_DISABLED) {
             std::cout << "Cursor is disabled." << std::endl;
