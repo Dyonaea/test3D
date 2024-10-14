@@ -42,8 +42,12 @@ void App::initWindow(){
 void App::init(){
     initWindow();
     shader = new Shader("./src/app/shader/default.vert", "./src/app/shader/default.frag");
-    test = new Test();
+    // test = new Test(glm::vec3(0.0f, 0.0f, 0.0f));
     player = new Player();
+    // blocs.push_back(test);
+    blocs.push_back(new Test(glm::vec3(0.0f, 0.0f, 0.0f)));
+    blocs.push_back(new Test(glm::vec3(0.0f, 1.0f, 0.0f)));
+    blocs.push_back(new Test(glm::vec3(1.0f, 3.0f, 2.0f)));
 }
 
 void App::fpsCount(){
@@ -53,23 +57,17 @@ void App::fpsCount(){
         std::stringstream ss;
         ss << "x) -FPS: " << std::to_string(nbFrames); 
         glfwSetWindowTitle(window, ss.str().c_str());
-        // std::cout<<nbFrames<<std::endl;
-        int cursorMode = glfwGetInputMode(window, GLFW_CURSOR);
-        if (cursorMode == GLFW_CURSOR_DISABLED) {
-            std::cout << "Cursor is disabled." << std::endl;
-        }
-        if(Physics::AABB(player->posMin+player->position, player->posMax+player->position, test->posMin+test->position, test->posMax+test->position)){
-        std::cout<<"collide"<<std::endl;
+        std::cout<<nbFrames<<std::endl;
     }
         nbFrames = 0;
         lastFrame += 1.0f;
-    }
+    
 }
 
 void App::update(){
     glfwPollEvents();
     fpsCount();
-    player->update();
+    player->update(blocs);
     
 }
 void App::render(){
@@ -81,19 +79,22 @@ void App::render(){
 
     shader->use();
     player->render();
-
-    test->render();
+    for(auto &bloc : blocs){
+        bloc->render();
+    }
     glfwSwapBuffers(window);
 }
 
 App::App(){
     init();
-    std::cout<<"ahh"<<std::endl;
 }
 
 App::~App(){
     terminate();
-    delete test;
+    for(auto &bloc: blocs){
+        delete bloc;
+    }
+
 }
 
 void App::terminate(){

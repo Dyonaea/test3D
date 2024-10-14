@@ -17,4 +17,6 @@
 #include<stb/stb_image.h>
 #include<vector>
 
+enum SIDE {LEFT, RIGHT, UP, DOWN, FACE, BACK};
+
 #endif

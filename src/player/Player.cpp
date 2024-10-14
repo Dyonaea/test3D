@@ -14,13 +14,19 @@ void Player::render(){
     camera->Matrix(70.0f, 0.1f, 100.0f, App::getApp()->shader, "camMatrix");
 }
 
-void Player::update(){
+void Player::update(std::vector<Test*> blocs){
     stop();
     currentTime = glfwGetTime();
     float deltaTime = currentTime - lastTime;
     lastTime = currentTime;
     Physics::gravity(&position, &velocity, deltaTime);
     movement(deltaTime);
+    for (auto &bloc : blocs){
+        if(Physics::AABB( posMin+ position, posMax+ position, bloc->posMin+ bloc->position, bloc->posMax+ bloc->position)){
+            handleCollision(Physics::sideDetect(position + posMid, bloc->position + bloc->posMid));
+        }
+    }
+    position += velocity * deltaTime;
 }
 
 void Player::movement(float deltaTime){
@@ -39,5 +45,5 @@ void Player::movement(float deltaTime){
     if(glfwGetKey(App::getApp()->window, GLFW_KEY_A) == GLFW_PRESS){
         moveRight();
     }
-    position += velocity * deltaTime;
+    
 }

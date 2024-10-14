@@ -13,16 +13,12 @@ void Movable::moveForward(){
     glm::vec3 flat_orientation = glm::normalize(glm::vec3(orientation.x, 0.0f, orientation.z));
     velocity.x += speed * flat_orientation.x;
     velocity.z += speed * flat_orientation.z;
-    std::cout<<"ox:"<<orientation.x<<std::endl;
-    std::cout<<"oz:"<<orientation.z<<std::endl;
 }
 
 void Movable::moveBackward(){
     glm::vec3 flat_orientation = glm::normalize(glm::vec3(orientation.x, 0.0f, orientation.z));
     velocity.x += speed * -flat_orientation.x;
     velocity.z += speed * -flat_orientation.z;
-    std::cout<<"ox:"<<orientation.x<<std::endl;
-    std::cout<<"oz:"<<orientation.z<<std::endl;
 }
 
 void Movable::moveLeft(){
@@ -40,4 +36,27 @@ void Movable::moveRight(){
     glm::vec3 left = glm::normalize(glm::cross(up, flat_orientation));
     velocity.x += speed * left.x; 
     velocity.z += speed * left.z; 
+}
+
+void Movable::handleCollision(SIDE side){
+    switch(side){
+        case RIGHT:
+            if(velocity.x < 0.0f) velocity.x = 0.0f;
+            break;
+        case LEFT: 
+            if(velocity.x > 0.0f) velocity.x = 0.0f;
+            break;
+        case FACE: 
+            if(velocity.z < 0.0f) velocity.z = 0.0f;
+            break;
+        case BACK:
+            if(velocity.z > 0.0f) velocity.z = 0.0f;
+            break;
+        case UP:
+            if(velocity.y < 0.0f) velocity.y = 0.0f;
+            break;
+        case DOWN: 
+            if(velocity.y > 0.0f) velocity.y = 0.0f;
+            break;
+    }
 }

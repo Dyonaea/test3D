@@ -2,7 +2,9 @@
 #include "../app/App.h"
 
 
-Test::Test(){
+Test::Test(glm::vec3 position)
+:position(position)
+{
     init();
 }
 

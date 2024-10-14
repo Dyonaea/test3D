@@ -11,6 +11,7 @@
 class App{
     private:
         static App* appInstance;
+        std::vector<Test*> blocs;
 
         int nbFrames = 0;
         float lastFrame = 0.0f;

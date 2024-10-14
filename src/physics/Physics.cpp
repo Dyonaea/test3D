@@ -13,6 +13,28 @@ bool Physics::AABB(const glm::vec3 v1min, const glm::vec3 v1max, const glm::vec3
         v1min.z < v2max.z);
 }
 
+SIDE Physics::sideDetect(const glm::vec3 v1, const glm::vec3 v2) {
+    glm::vec3 gap = v1 - v2;
+    if(glm::abs(gap.x) > glm::abs(gap.y) && glm::abs(gap.x) > glm::abs(gap.z)) {
+        if(gap.x > 0) {
+            return RIGHT;
+        }
+        return LEFT;
+    }
+    else if(glm::abs(gap.y) > glm::abs(gap.z)) { 
+         if(gap.y > 0) {
+            return UP;
+         }
+         return DOWN;
+    }
+    else {
+         if(gap.z > 0) {
+            return FACE;
+         }
+         return BACK;
+    }
+}
+
 void Physics::gravity(glm::vec3 *position, glm::vec3 *velocity, float deltaTime){
     velocity->y += G * deltaTime;
     if(velocity->y < maxVelocity){

@@ -126,11 +126,12 @@ float vertices[5 * 4 * 6] = {
         void init();
 
     public:
-        glm::vec3 position = glm::vec3(0.0, 0.0, 0.0);
+        glm::vec3 position;
         glm::vec3 posMin = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 posMax = glm::vec3(1.0f, 1.0f, 1.0f);
+        glm::vec3 posMid = glm::vec3(0.5f, 0.5f, 0.5f);
         unsigned int texture;
-        Test();
+        Test(glm::vec3 position);
         ~Test();
         void render();
         void update();
