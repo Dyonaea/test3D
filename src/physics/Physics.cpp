@@ -15,17 +15,21 @@ bool Physics::AABB(const glm::vec3 v1min, const glm::vec3 v1max, const glm::vec3
 
 SIDE Physics::sideDetect(const glm::vec3 v1, const glm::vec3 v2) {
     glm::vec3 gap = v1 - v2;
-    if(glm::abs(gap.x) > glm::abs(gap.y) && glm::abs(gap.x) > glm::abs(gap.z)) {
+    if(gap.y >= 0){
+        if((gap.y - 0.9f > glm::abs(gap.x) && gap.y - 0.9f > glm::abs(gap.z))){
+            return UP;
+        }
+    }
+    else{
+         if(gap.y + 0.9f < (-glm::abs(gap.x)) && gap.y + 0.9f < (-glm::abs(gap.z))){
+            return DOWN;
+         }
+    }
+    if(glm::abs(gap.x) >= glm::abs(gap.z)) {
         if(gap.x > 0) {
             return RIGHT;
         }
         return LEFT;
-    }
-    else if(glm::abs(gap.y) > glm::abs(gap.z)) { 
-         if(gap.y > 0) {
-            return UP;
-         }
-         return DOWN;
     }
     else {
          if(gap.z > 0) {

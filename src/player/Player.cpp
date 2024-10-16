@@ -24,6 +24,7 @@ void Player::update(std::vector<Test*> blocs){
     for (auto &bloc : blocs){
         if(Physics::AABB( posMin+ position, posMax+ position, bloc->posMin+ bloc->position, bloc->posMax+ bloc->position)){
             handleCollision(Physics::sideDetect(position + posMid, bloc->position + bloc->posMid));
+
         }
     }
     position += velocity * deltaTime;

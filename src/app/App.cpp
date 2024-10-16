@@ -48,6 +48,8 @@ void App::init(){
     blocs.push_back(new Test(glm::vec3(0.0f, 0.0f, 0.0f)));
     blocs.push_back(new Test(glm::vec3(0.0f, 1.0f, 0.0f)));
     blocs.push_back(new Test(glm::vec3(1.0f, 3.0f, 2.0f)));
+    blocs.push_back(new Test(glm::vec3(3.0f, 0.0f, 2.0f)));
+    
 }
 
 void App::fpsCount(){
