@@ -16,6 +16,8 @@
 #include<glm/gtx/vector_angle.hpp>
 #include<stb/stb_image.h>
 #include<vector>
+#include <map>
+#include <memory>
 
 enum SIDE {LEFT, RIGHT, UP, DOWN, FACE, BACK};
 

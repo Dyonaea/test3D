@@ -3,22 +3,22 @@
 
 #include "../util/util.h"
 #include "shader/shader.h"
-#include "../test/Test.h"
+#include "../world/Bloc.h"
 #include "./camera/Camera.h"
 #include "../player/Player.h"
 #include "../physics/Physics.h"
+#include "../world/World.h"
+
 
 class App{
     private:
         static App* appInstance;
-        std::vector<Test*> blocs;
+        std::vector<Bloc*> blocs;
 
         int nbFrames = 0;
         float lastFrame = 0.0f;
-
-        Camera* camera;
-        Test* test;
         Player* player;
+        World* world;
 
         void init();
         void initWindow();

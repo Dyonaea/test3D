@@ -1,7 +1,7 @@
 #include "Physics.h"
 
 const float Physics::G  = -9.8f;
-const float Physics::maxVelocity = -10.0f;
+const float Physics::maxVelocity = -30.0f;
 
 bool Physics::AABB(const glm::vec3 v1min, const glm::vec3 v1max, const glm::vec3 v2min, const glm::vec3 v2max){
     return (
@@ -16,12 +16,12 @@ bool Physics::AABB(const glm::vec3 v1min, const glm::vec3 v1max, const glm::vec3
 SIDE Physics::sideDetect(const glm::vec3 v1, const glm::vec3 v2) {
     glm::vec3 gap = v1 - v2;
     if(gap.y >= 0){
-        if((gap.y - 0.9f > glm::abs(gap.x) && gap.y - 0.9f > glm::abs(gap.z))){
+        if((gap.y - (0.9f - 0.3f) > glm::abs(gap.x) && gap.y - (0.9f - 0.3f) > glm::abs(gap.z))){
             return UP;
         }
     }
     else{
-         if(gap.y + 0.9f < (-glm::abs(gap.x)) && gap.y + 0.9f < (-glm::abs(gap.z))){
+         if(gap.y + (0.9f - 0.3f) < (-glm::abs(gap.x)) && gap.y + (0.9f - 0.3f) < (-glm::abs(gap.z))){
             return DOWN;
          }
     }

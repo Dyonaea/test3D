@@ -4,7 +4,7 @@
 #include "../util/util.h"
 #include "../app/camera/Camera.h"
 #include "../physics/Movable.h"
-#include "../test/Test.h"
+#include "../world/Bloc.h"
 
 class Player: public Movable{
     private:
@@ -19,9 +19,9 @@ class Player: public Movable{
         glm::vec3 posMid = glm::vec3(0.0f, -0.9f, 0.0f);
         Player();
         ~Player();
-        void update(std::vector<Test*> blocs);
+        void update(std::vector<Bloc*> blocs);
         void render();
-        void movement(float deltaTime);
+        void movement();
 
 };
 

@@ -42,13 +42,7 @@ void App::initWindow(){
 void App::init(){
     initWindow();
     shader = new Shader("./src/app/shader/default.vert", "./src/app/shader/default.frag");
-    // test = new Test(glm::vec3(0.0f, 0.0f, 0.0f));
-    player = new Player();
-    // blocs.push_back(test);
-    blocs.push_back(new Test(glm::vec3(0.0f, 0.0f, 0.0f)));
-    blocs.push_back(new Test(glm::vec3(0.0f, 1.0f, 0.0f)));
-    blocs.push_back(new Test(glm::vec3(1.0f, 3.0f, 2.0f)));
-    blocs.push_back(new Test(glm::vec3(3.0f, 0.0f, 2.0f)));
+    world = new World();
     
 }
 
@@ -60,30 +54,26 @@ void App::fpsCount(){
         ss << "x) -FPS: " << std::to_string(nbFrames); 
         glfwSetWindowTitle(window, ss.str().c_str());
         std::cout<<nbFrames<<std::endl;
-    }
         nbFrames = 0;
         lastFrame += 1.0f;
+    }
     
 }
 
 void App::update(){
     glfwPollEvents();
     fpsCount();
-    player->update(blocs);
+    world->update();
     
 }
 void App::render(){
-
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    
 
     shader->use();
-    player->render();
-    for(auto &bloc : blocs){
-        bloc->render();
-    }
+    world->render();
     glfwSwapBuffers(window);
 }
 
@@ -93,10 +83,7 @@ App::App(){
 
 App::~App(){
     terminate();
-    for(auto &bloc: blocs){
-        delete bloc;
-    }
-
+    delete world;
 }
 
 void App::terminate(){
