@@ -10,12 +10,15 @@
 class World{
     public:
         TextureManager texManager;
+        std::unordered_map<glm::ivec3, Chunk*, ChunkCoordHash> loadedChunk;
+        int renderDistance = 5;
 
         World();
         ~World();
         void init();
         void render();
         void update();
+        void chunkGenerationUpdate();
 
     private:
         Player* player;

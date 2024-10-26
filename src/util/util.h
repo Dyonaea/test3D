@@ -18,6 +18,7 @@
 #include<vector>
 #include <map>
 #include <memory>
+#include <unordered_map>
 
 enum SIDE {LEFT, RIGHT, UP, DOWN, FACE, BACK};
 

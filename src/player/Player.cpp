@@ -3,6 +3,7 @@
 
 Player::Player(){
     camera = new Camera(1000, 1000, &position, &orientation);
+    position.y = 18;
 }
 
 Player::~Player(){
@@ -11,15 +12,16 @@ Player::~Player(){
 
 void Player::render(){
     camera->inputs(App::getApp()->window);
-    camera->Matrix(90.0f, 0.1f, 100.0f, App::getApp()->shader, "camMatrix");
+    camera->Matrix(90.0f, 0.1f, 200.0f, App::getApp()->shader, "camMatrix");
 }
 
 void Player::update(std::vector<Bloc*> blocs){
     stop();
+    velocity.y = 0;
     currentTime = glfwGetTime();
     float deltaTime = currentTime - lastTime;
     lastTime = currentTime;
-    Physics::gravity(&position, &velocity, deltaTime);
+    // Physics::gravity(&position, &velocity, deltaTime);
     movement();
     for (auto &bloc : blocs){
         if(Physics::AABB( posMin+ position, posMax+ position, bloc->posMin+ bloc->position, bloc->posMax+ bloc->position)){

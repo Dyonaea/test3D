@@ -1,7 +1,7 @@
 #include "Chunk.h"
 
 
-Chunk::Chunk(glm::vec3 pos) {
+Chunk::Chunk(glm::ivec3 pos) {
     position.x = pos.x * width;
     position.y = pos.y * height;
     position.z = pos.z * depth;
@@ -38,30 +38,57 @@ void Chunk::generateMesh(){
     for(int x = 0; x < width; x++){
         for(int y = 0; y < height; y++){
             for(int z = 0; z < depth; z++){
-                addMeshFace(x, y, z, blocks[x][y][z].textureID);
+                voxel& block = blocks[x][y][z];
+
+                if (block.isSolid) {
+                    // Add top face
+                    if (y == height - 1 || !blocks[x][y + 1][z].isSolid) {
+                        addMeshFace(x, y, z, block.textureID, UP);
+                    }
+                    // Add bottom face
+                    if (y == 0 || !blocks[x][y - 1][z].isSolid) {
+                        addMeshFace(x, y, z, block.textureID, DOWN);
+                    }
+                    // Add front face
+                    if (z == depth - 1 || !blocks[x][y][z + 1].isSolid) {
+                        addMeshFace(x, y, z, block.textureID, FACE);
+                    }
+                    // Add back face
+                    if (z == 0 || !blocks[x][y][z - 1].isSolid) {
+                        addMeshFace(x, y, z, block.textureID, BACK);
+                    }
+                    // Add left face
+                    if (x == 0 || !blocks[x - 1][y][z].isSolid) {
+                        addMeshFace(x, y, z, block.textureID, LEFT);
+                    }
+                    // Add right face
+                    if (x == width - 1 || !blocks[x + 1][y][z].isSolid) {
+                        addMeshFace(x, y, z, block.textureID, RIGHT);
+                    }
+                }
             }
         }
     }
 }
 
-void Chunk::addMeshFace(int x, int y, int z, int textureID){
+void Chunk::addMeshFace(int x, int y, int z, int textureID, SIDE f){
     glm::vec2 texCoords = textureAtlasCoords[textureID];
 
     glm::vec2 texSize(1.0f/ATLAS_COLS, 1.0f/ATLAS_ROWS);
     glm::vec2 topLeft = texCoords * texSize;
     glm::vec2 botRight = topLeft + texSize;
 
-    float topFace[] = {
+    float Face[] = {
             // Position                     // Texture Coords
-        x,        y + 1.0f, z,        topLeft.x, topLeft.y,
-        x + 1.0f, y + 1.0f, z,        botRight.x, topLeft.y, 
-        x + 1.0f, y + 1.0f, z + 1.0f, botRight.x, botRight.y, 
-        x,        y + 1.0f, z + 1.0f, topLeft.x, botRight.y    
+        x + position.x + faceV[f][0], y + position.y + faceV[f][1],  z + position.z + faceV[f][2],  topLeft.x, topLeft.y,
+        x + position.x + faceV[f][3], y + position.y + faceV[f][4],  z + position.z + faceV[f][5],  botRight.x, topLeft.y, 
+        x + position.x + faceV[f][6], y + position.y + faceV[f][7],  z + position.z + faceV[f][8],  botRight.x, botRight.y, 
+        x + position.x + faceV[f][9], y + position.y + faceV[f][10], z + position.z + faceV[f][11], topLeft.x, botRight.y    
     };
-    vertices.insert(vertices.end(), std::begin(topFace), std::end(topFace));
+    vertices.insert(vertices.end(), std::begin(Face), std::end(Face));
     GLuint topIndices[] = { indexCount, indexCount + 1, indexCount + 2, indexCount, indexCount + 2, indexCount + 3 };
     indices.insert(indices.end(), std::begin(topIndices), std::end(topIndices));
-    indexCount +=4;
+    indexCount +=4;  
     triangleCount +=2;
 }
 

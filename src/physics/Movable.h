@@ -5,7 +5,7 @@
 
 class Movable{
     public:
-        float speed = 3.0;
+        float speed = 9.0;
         void moveForward();
         void moveBackward();
         void moveLeft();

@@ -9,6 +9,13 @@ struct voxel{
     int textureID;
 };
 
+struct ChunkCoordHash{
+    std::size_t operator()(const glm::ivec3 coord) const{
+        return std::hash<int>()(coord.x) ^ std::hash<int>()(coord.y) << 1 ^ std::hash<int>()(coord.z) << 2;
+    }
+};
+
+
 class Chunk{
     public:
         const static int width = 16;
@@ -32,14 +39,30 @@ class Chunk{
         GLuint triangleCount;
         GLuint indexCount;
     
-        Chunk(glm::vec3 pos);
+        Chunk(glm::ivec3 pos);
         ~Chunk();
         void init();
         void render();
         
     private:
+
+        const float faceV[6][12] = {
+        // LEFT
+        { 0.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 1.0f,   0.0f, 1.0f, 0.0f },
+        // RIGHT
+        { 1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f, 0.0f },
+        // UP
+        { 0.0f, 1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f },
+        // DOWN
+        { 0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   0.0f, 0.0f, 1.0f },
+        // FACE
+        { 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f },
+        // BACK
+        { 0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f, 0.0f },
+        };
+
         GLuint VAO, VBO, EBO;   
-        void addMeshFace(int x, int y, int z, int textureID);
+        void addMeshFace(int x, int y, int z, int textureID, SIDE f);
         void generateMesh();
         void updateBuffer();
 
