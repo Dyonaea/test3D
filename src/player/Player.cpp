@@ -3,7 +3,7 @@
 
 Player::Player(){
     camera = new Camera(1000, 1000, &position, &orientation);
-    position.y = 18;
+    position.y = 12;
 }
 
 Player::~Player(){
@@ -12,7 +12,7 @@ Player::~Player(){
 
 void Player::render(){
     camera->inputs(App::getApp()->window);
-    camera->Matrix(90.0f, 0.1f, 200.0f, App::getApp()->shader, "camMatrix");
+    camera->Matrix(80.0f, 0.1f, 200.0f, App::getApp()->shader, "camMatrix");
 }
 
 void Player::update(std::vector<Bloc*> blocs){
@@ -47,6 +47,9 @@ void Player::movement(){
     }
     if(glfwGetKey(App::getApp()->window, GLFW_KEY_A) == GLFW_PRESS){
         moveRight();
+    }
+    if(glfwGetKey(App::getApp()->window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
+        moveDown();
     }
     
 }

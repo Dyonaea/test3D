@@ -19,6 +19,7 @@
 #include <map>
 #include <memory>
 #include <unordered_map>
+#include <FastNoiseLite/FastNoiseLite.h>
 
 enum SIDE {LEFT, RIGHT, UP, DOWN, FACE, BACK};
 

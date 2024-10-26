@@ -19,7 +19,7 @@ struct ChunkCoordHash{
 class Chunk{
     public:
         const static int width = 16;
-        const static int height = 16;
+        const static int height = 48;
         const static int depth = 16;
 
         const glm::vec2 textureAtlasCoords[3] = {
@@ -28,7 +28,9 @@ class Chunk{
             glm::vec2(1.0f, 0.0f),  // Stone
         };
         const int ATLAS_ROWS = 1;
-        const int ATLAS_COLS = 1;
+        const int ATLAS_COLS = 2;
+        const int SEED = 1;
+        FastNoiseLite noise;
 
 
         glm::vec3 position;
@@ -46,19 +48,28 @@ class Chunk{
         
     private:
 
-        const float faceV[6][12] = {
+        const float faceV[6][13] = {
         // LEFT
-        { 0.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 1.0f,   0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 1.0f,   0.0f, 1.0f, 0.0f, 0.6f },
         // RIGHT
-        { 1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f, 0.0f },
+        { 1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f, 0.0f, 0.6f },
         // UP
-        { 0.0f, 1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f },
+        { 0.0f, 1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f, 1.0f },
         // DOWN
-        { 0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   0.0f, 0.0f, 1.0f },
+        { 0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   0.0f, 0.0f, 1.0f, 0.4f },
         // FACE
-        { 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f },
+        { 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f, 0.8f },
         // BACK
-        { 0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.8f },
+        };
+
+        float shading_values[6][4] = {
+            0.6, 0.6, 0.6, 0.6,
+            0.6, 0.6, 0.6, 0.6,
+            1.0, 1.0, 1.0, 1.0,
+            0.4, 0.4, 0.4, 0.4,
+            0.8, 0.8, 0.8, 0.8,
+	        0.8, 0.8, 0.8, 0.8,
         };
 
         GLuint VAO, VBO, EBO;   

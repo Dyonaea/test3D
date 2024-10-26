@@ -30,6 +30,12 @@ void App::initWindow(){
     glViewport(0, 0, 1000, 1000);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwFocusWindow(window);
+    
+    glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_CULL_FACE);
+    // glCullFace(GL_BACK);
+    // glFrontFace(GL_CCW);
+    
 
     
     // glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);

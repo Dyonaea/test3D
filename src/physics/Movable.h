@@ -10,6 +10,7 @@ class Movable{
         void moveBackward();
         void moveLeft();
         void moveRight();
+        void moveDown();
         void jump();    
         void stop();
         void handleCollision(SIDE side);

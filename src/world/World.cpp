@@ -3,7 +3,8 @@
 World::World(){
     renderDistance = 10;
     init();
-    texManager.loadTexture( "grass", "res/dirt.png", "specular");
+    texManager.loadTexture( "grass", "res/waterngrass.png", "");
+    
 }
 
 World::~World(){
@@ -48,7 +49,7 @@ void World::chunkGenerationUpdate(){
         }
     }
     for (auto it = loadedChunk.begin(); it != loadedChunk.end(); ) {
-        if (glm::distance(glm::vec3(it->second->position.x / Chunk::width, 0, it->second->position.z / Chunk::depth), playerPos) >= renderDistance) {
+        if (glm::distance(glm::vec3(it->second->position.x / Chunk::width, 0, it->second->position.z / Chunk::depth), playerPos) >= renderDistance + 2) {
                 delete it->second;
                 it = loadedChunk.erase(it);
         } else {

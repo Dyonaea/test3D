@@ -6,7 +6,7 @@ Camera::Camera(int width, int height, glm::vec3 *position, glm::vec3 *orientatio
     Camera::height = height;
     Camera::position = position;
     Camera::orientation = orientation;
-
+    aspect = (float)width/(float)height;
 
 }
 
@@ -15,7 +15,7 @@ void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader *shade
    glm::mat4 projection = glm::mat4(1.0f); 
 
    view = glm::lookAt(*position, *position + *orientation, up);
-   projection = glm::perspective(glm::radians(FOVdeg), (float)(width/height), nearPlane, farPlane);
+   projection = glm::perspective(glm::radians(FOVdeg), aspect, nearPlane, farPlane);
 
    glUniformMatrix4fv(glGetUniformLocation(shader->ID, uniform), 1, GL_FALSE, glm::value_ptr(projection * view));
 }
