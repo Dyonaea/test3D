@@ -38,12 +38,12 @@ void Chunk::generateMesh(){
     for(int x = 0; x < width; x++){
         for(int z = 0; z < depth; z++){
             float e = 
-                1.0f * noise.GetNoise(1.0f * (x + position.x), 1.0f * (z + position.z)) +
-                0.5f * noise.GetNoise(2.0f * (x + position.x), 2.0f * (z + position.z)) +
-                0.25f * noise.GetNoise(4.0f * (x + position.x), 4.0f * (z + position.z));
+                1.0f * noise.GetNoise(0.5f * (x + position.x), 0.5f * (z + position.z)) +
+                0.2f * noise.GetNoise(2.0f * (x + position.x), 2.0f * (z + position.z)) +
+                0.1f * noise.GetNoise(4.0f * (x + position.x), 4.0f * (z + position.z));
 
-                e = (e + 1.75f) / (2*1.75); 
-            for(int y = 0; y < pow(e, 4) * (float)height; y++){
+                e = (e + 1.3f) / (2*1.3); 
+            for(int y = 0; y < pow(e, 3) * (float)height; y++){
                 voxel block = {true, 2};
                 blocks[x][y][z] = block;
             }
