@@ -1,3 +1,6 @@
+#ifndef MAIN
+#define MAIN
+
 #include  "./app/app.h"
 
 int main(){
@@ -8,3 +11,5 @@ int main(){
     }
     return EXIT_SUCCESS;
 }
+
+#endif

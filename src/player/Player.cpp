@@ -12,7 +12,7 @@ Player::~Player(){
 
 void Player::render(){
     camera->inputs(App::getApp()->window);
-    camera->Matrix(80.0f, 0.1f, 200.0f, App::getApp()->shader, "camMatrix");
+    camera->Matrix(80.0f, 0.1f, 500.0f, App::getApp()->shader, "camMatrix");
 }
 
 void Player::update(std::vector<Bloc*> blocs){

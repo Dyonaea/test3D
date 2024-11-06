@@ -6,10 +6,10 @@ void Movable::stop(){
 }
 
 void Movable::jump(){
-    velocity.y = 10.0f;
+    velocity.y = speed;
 }
 void Movable::moveDown(){
-    velocity.y = -10.0f;
+    velocity.y = -speed;
 }
 
 void Movable::moveForward(){

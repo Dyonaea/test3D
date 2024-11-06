@@ -43,7 +43,7 @@ void Chunk::generateMesh(){
                 0.25f * noise.GetNoise(4.0f * (x + position.x), 4.0f * (z + position.z));
 
                 e = (e + 1.75f) / (2*1.75); 
-            for(int y = 0; y < pow(e, 3) * (float)height; y++){
+            for(int y = 0; y < pow(e, 4) * (float)height; y++){
                 voxel block = {true, 2};
                 blocks[x][y][z] = block;
             }

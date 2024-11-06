@@ -18,9 +18,9 @@ struct ChunkCoordHash{
 
 class Chunk{
     public:
-        const static int width = 16;
-        const static int height = 48;
-        const static int depth = 16;
+        const static int width = 32;
+        const static int height = 64;
+        const static int depth = 32;
 
         const glm::vec2 textureAtlasCoords[3] = {
             glm::vec2(0.0f, 0.0f),  // Dirt
