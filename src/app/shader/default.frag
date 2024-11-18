@@ -9,5 +9,10 @@ uniform sampler2D tex;
 
 
 void main() {
-    FragColor = texture(tex, texCoord) * shading_value;
+    vec4 texture_colour = texture(tex, texCoord);
+
+    if (texture_colour.r == 0.0 && texture_colour.r == 0.0 && texture_colour.r == 0.0 ){
+        discard;
+    }
+    FragColor = texture_colour * shading_value;
 }

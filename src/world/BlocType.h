@@ -9,7 +9,8 @@ PLANT
 
 enum BLOC_ID{
     AIR,
-    GRASS
+    GRASS,
+    DAISY
 };
 
 struct voxelType{

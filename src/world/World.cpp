@@ -3,7 +3,7 @@
 World::World(){
     renderDistance = 5;
     init();
-    texManager.loadTexture( "grass", "res/grassBlock.png", "");
+    texManager.loadTexture( "grass", "res/tex.png", "");
     
 }
 
@@ -82,20 +82,16 @@ voxel World::getBlocAt(glm::vec3 pos, const std::unordered_map<glm::ivec3, Chunk
         static_cast<int>(std::floor(pos.y / Chunk::height)),
         static_cast<int>(std::floor(pos.z / Chunk::depth))
     );
-
-    // Ensure the chunk exists
     auto it = loadedChunk.find(chunkKey);
     if (it == loadedChunk.end()) {
         throw std::out_of_range("Chunk does not exist at the specified position");
     }
     Chunk* chunk = it->second;
 
-    // Calculate block indices
     int x = static_cast<int>(std::floor(pos.x)) % Chunk::width;
     int y = static_cast<int>(std::floor(pos.y)) % Chunk::height;
     int z = static_cast<int>(std::floor(pos.z)) % Chunk::depth;
 
-    // Handle negative indices
     if (x < 0) x += Chunk::width;
     if (y < 0) y += Chunk::height;
     if (z < 0) z += Chunk::depth;

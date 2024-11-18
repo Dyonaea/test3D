@@ -35,7 +35,6 @@ void Chunk::generateMesh(){
     indices.clear();
     triangleCount = 0;
     indexCount = 0;
-    std::cout<<indices.size()<<std::endl;
     if(!firstGen){
         for(int x = 0; x < width; x++){
             for(int z = 0; z < depth; z++){
@@ -45,9 +44,17 @@ void Chunk::generateMesh(){
                     0.1f * noise.GetNoise(4.0f * (x + position.x), 4.0f * (z + position.z));
 
                     e = (e + 1.3f) / (2*1.3); 
-                for(int y = 0; y < pow(e, 3) * (float)height +1; y++){
-                    voxel block = {GRASS};
-                    blocks[x][y][z] = block;
+                    e = pow(e, 3) * (float)height +1;
+                for(int y = 0; y < e; y++){
+                    if (y+1 < e){
+                        voxel block = {GRASS};
+                        blocks[x][y][z] = block;
+                    }else{
+                        if (noise.GetNoise(50*x+position.x, 50*z+position.z) > 0.9f ){
+                            blocks[x][y][z] = {DAISY};
+                        }
+                    }
+                    
                 }
             }
         }
@@ -59,7 +66,7 @@ void Chunk::generateMesh(){
             for(int y = 0; y < height; y++){
                 voxel& b = blocks[x][y][z];
 
-                if (blocType.vtRegistry[b.blockID].isSolid) {
+                if (!blocType.vtRegistry[b.blockID].transparent) {
                     voxelType block = blocType.vtRegistry[b.blockID];
                     // Add left face
                     if (x == 0 ||!blocType.vtRegistry[blocks[x-1][y][z].blockID].isSolid) {

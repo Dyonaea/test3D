@@ -19,13 +19,14 @@ class Chunk{
 
         BlocType blocType;
 
-        const glm::vec2 textureAtlasCoords[3] = {
+        const glm::vec2 textureAtlasCoords[4] = {
             glm::vec2(0.0f, 0.0f),  // Dirt
             glm::vec2(0.0f, 1.0f),  // Grass
             glm::vec2(0.0f, 2.0f),  // Stone
+            glm::vec2(0.0f, 3.0f),  // Stone
         };
         const int ATLAS_ROWS = 1;
-        const int ATLAS_COLS = 3;
+        const int ATLAS_COLS = 4;
         const int SEED = 1;
         FastNoiseLite noise;
 
@@ -50,17 +51,17 @@ class Chunk{
         {
         {
             // LEFT
-            { 0.0f, 1.0f, 1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,       0.6f },
+            { 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 1.0f,     0.6f },
             // RIGHT    
-            { 1.0f, 1.0f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f, 1.0f,   1.0f, 0.0f, 0.0f,     0.6f },
+            { 1.0f, 1.0f, 1.0f,   1.0f, 0.0f, 1.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, 0.0f,     0.6f },
             // UP   
-            { 1.0f, 1.0f, 1.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f, 1.0f,     1.0f },
+            { 1.0f, 1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     1.0f },
             // DOWN 
-            { 0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   0.0f, 0.0f, 1.0f,     0.4f },
+            { 1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, 0.0f,     0.4f },
             // FACE 
-            { 1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f,     0.8f },
+            { 0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.8f },
             // BACK 
-            { 0.0f, 1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 0.0f,     0.8f },
+            { 1.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,     0.8f },
         },
         {
             //

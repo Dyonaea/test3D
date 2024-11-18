@@ -12,21 +12,21 @@ Player::~Player(){
 
 void Player::render(){
     camera->inputs(App::getApp()->window);
-    camera->Matrix(80.0f, 0.1f, 500.0f, App::getApp()->shader, "camMatrix");
+    camera->Matrix(80.0f, 0.1f, 1000.0f, App::getApp()->shader, "camMatrix");
 }
 
 void Player::update(std::unordered_map<glm::ivec3, Chunk*, ChunkCoordHash> loadedChunk){
 
     stop();
-
+    velocity.y = 0;
     currentTime = glfwGetTime();
     float deltaTime = currentTime - lastTime;
     lastTime = currentTime;
 
-    Physics::gravity(&position, &velocity, deltaTime);
+    // Physics::gravity(&position, &velocity, deltaTime);
     movement();
     handAction(loadedChunk);
-    collisions(loadedChunk);
+    // collisions(loadedChunk);
     position += velocity * deltaTime;
 
 }
