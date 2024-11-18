@@ -21,7 +21,7 @@ void Chunk::init(){
     for(int i = 0; i < width; i++){
         for(int j = 0; j < height; j++){
             for(int k = 0; k < depth; k++){
-                blocks[i][j][k] = {false, 0};
+                blocks[i][j][k] = {AIR};
             }
         }
     }
@@ -35,51 +35,55 @@ void Chunk::generateMesh(){
     indices.clear();
     triangleCount = 0;
     indexCount = 0;
-    for(int x = 0; x < width; x++){
-        for(int z = 0; z < depth; z++){
-            float e = 
-                1.0f * noise.GetNoise(0.5f * (x + position.x), 0.5f * (z + position.z)) +
-                0.2f * noise.GetNoise(2.0f * (x + position.x), 2.0f * (z + position.z)) +
-                0.1f * noise.GetNoise(4.0f * (x + position.x), 4.0f * (z + position.z));
+    std::cout<<indices.size()<<std::endl;
+    if(!firstGen){
+        for(int x = 0; x < width; x++){
+            for(int z = 0; z < depth; z++){
+                float e = 
+                    1.0f * noise.GetNoise(0.5f * (x + position.x), 0.5f * (z + position.z)) +
+                    0.2f * noise.GetNoise(2.0f * (x + position.x), 2.0f * (z + position.z)) +
+                    0.1f * noise.GetNoise(4.0f * (x + position.x), 4.0f * (z + position.z));
 
-                e = (e + 1.3f) / (2*1.3); 
-            for(int y = 0; y < pow(e, 3) * (float)height; y++){
-                voxel block = {true, 2};
-                blocks[x][y][z] = block;
+                    e = (e + 1.3f) / (2*1.3); 
+                for(int y = 0; y < pow(e, 3) * (float)height +1; y++){
+                    voxel block = {GRASS};
+                    blocks[x][y][z] = block;
+                }
             }
         }
+        firstGen = true;
     }
-
-
+    // std::cout<<"test"<<std::endl;
     for(int x = 0; x < width; x++){
         for(int z = 0; z < depth; z++){
             for(int y = 0; y < height; y++){
-                voxel& block = blocks[x][y][z];
+                voxel& b = blocks[x][y][z];
 
-                if (block.isSolid) {
-                    // Add top face
-                     if (y == height - 1 || !blocks[x][y + 1][z].isSolid) {
-                        addMeshFace(x, y, z, block.textureID, UP);
-                    }
-                    // Add bottom face
-                    if (y == 0 || !blocks[x][y - 1][z].isSolid) {
-                        addMeshFace(x, y, z, block.textureID, DOWN);
-                    }
-                    // Add front face
-                    if (z == depth - 1 || !blocks[x][y][z + 1].isSolid) {
-                        addMeshFace(x, y, z, block.textureID, FACE);
-                    }
-                    // Add back face
-                    if (z == 0 || !blocks[x][y][z - 1].isSolid) {
-                        addMeshFace(x, y, z, block.textureID, BACK);
-                    }
+                if (blocType.vtRegistry[b.blockID].isSolid) {
+                    voxelType block = blocType.vtRegistry[b.blockID];
                     // Add left face
-                    if (x == 0 || !blocks[x - 1][y][z].isSolid) {
-                        addMeshFace(x, y, z, block.textureID, LEFT);
+                    if (x == 0 ||!blocType.vtRegistry[blocks[x-1][y][z].blockID].isSolid) {
+                        addMeshFace(x, y, z, block.textures[0], LEFT, block.blocModel);
                     }
                     // Add right face
-                    if (x == width - 1 || !blocks[x + 1][y][z].isSolid) {
-                        addMeshFace(x, y, z, block.textureID, RIGHT);
+                    if (x == width - 1 || !blocType.vtRegistry[blocks[x+1][y][z].blockID].isSolid) {
+                        addMeshFace(x, y, z, block.textures[1], RIGHT, block.blocModel);
+                    }
+                    // Add top face
+                     if (y == height - 1 ||  !blocType.vtRegistry[blocks[x][y + 1][z].blockID].isSolid) {
+                        addMeshFace(x, y, z, block.textures[2], UP, block.blocModel);
+                    }
+                    // Add bottom face
+                    if (y == 0 || !blocType.vtRegistry[blocks[x][y-1][z].blockID].isSolid) {
+                        addMeshFace(x, y, z, block.textures[3], DOWN, block.blocModel);
+                    }
+                    // Add front face
+                    if (z == depth - 1 || !blocType.vtRegistry[blocks[x][y][z+1].blockID].isSolid) {
+                        addMeshFace(x, y, z, block.textures[4], FACE, block.blocModel);
+                    }
+                    // Add back face
+                    if (z == 0 || !blocType.vtRegistry[blocks[x][y][z-1].blockID].isSolid) {
+                        addMeshFace(x, y, z, block.textures[5], BACK, block.blocModel);
                     }
                 }
             }
@@ -87,19 +91,19 @@ void Chunk::generateMesh(){
     }
 }
 
-void Chunk::addMeshFace(int x, int y, int z, int textureID, SIDE f){
+void Chunk::addMeshFace(int x, int y, int z, int textureID, SIDE f, MODEL m){
     glm::vec2 texCoords = textureAtlasCoords[textureID];
 
-    glm::vec2 texSize(1.0f/ATLAS_COLS, 1.0f/ATLAS_ROWS);
+    glm::vec2 texSize(1.0f/ATLAS_ROWS, 1.0f/ATLAS_COLS);
     glm::vec2 topLeft = texCoords * texSize;
     glm::vec2 botRight = topLeft + texSize;
 
-    float Face[] = {
+    float Face[6*4] = {
             // Position                                                                             // Texture Coords       //Shading Values
-        x + position.x + faceV[f][0], y + position.y + faceV[f][1],  z + position.z + faceV[f][2],  topLeft.x, topLeft.y, faceV[f][12],
-        x + position.x + faceV[f][3], y + position.y + faceV[f][4],  z + position.z + faceV[f][5],  botRight.x, topLeft.y, faceV[f][12], 
-        x + position.x + faceV[f][6], y + position.y + faceV[f][7],  z + position.z + faceV[f][8],  botRight.x, botRight.y, faceV[f][12], 
-        x + position.x + faceV[f][9], y + position.y + faceV[f][10], z + position.z + faceV[f][11], topLeft.x, botRight.y, faceV[f][12]    
+        x + position.x + faceV[m][f][0], y + position.y + faceV[m][f][1],  z + position.z + faceV[m][f][2], topLeft.y, botRight.x , faceV[m][f][12],
+        x + position.x + faceV[m][f][3], y + position.y + faceV[m][f][4],  z + position.z + faceV[m][f][5], topLeft.y, topLeft.x , faceV[m][f][12], 
+        x + position.x + faceV[m][f][6], y + position.y + faceV[m][f][7],  z + position.z + faceV[m][f][8],  botRight.y, topLeft.x, faceV[m][f][12], 
+        x + position.x + faceV[m][f][9], y + position.y + faceV[m][f][10], z + position.z + faceV[m][f][11], botRight.y, botRight.x, faceV[m][f][12]    
     };
     vertices.insert(vertices.end(), std::begin(Face), std::end(Face));
     GLuint topIndices[] = { indexCount, indexCount + 1, indexCount + 2, indexCount, indexCount + 2, indexCount + 3 };
@@ -136,4 +140,16 @@ void Chunk::render() {
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+}
+
+bool Chunk::destroyBlock(glm::ivec3 pos){
+    // std::cout<<position.x << "  " << position.z <<"  "<<pos.x<<" "<<pos.y<< " "<<pos.z<<std::endl;
+    if (!blocType.vtRegistry[blocks[pos.x][pos.y][pos.z].blockID].isSolid){
+        //std::cout<<vertices.size()<<std::endl;
+        blocks[pos.x][pos.y][pos.z] = {GRASS};
+        generateMesh();
+        updateBuffer();
+        return true;
+    }
+    return false;
 }

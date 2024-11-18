@@ -3,18 +3,11 @@
 
 #include "../util/util.h"
 #include "../app/texture/TextureManager.h"
+#include "BlocType.h"
 
 struct voxel{
-    bool isSolid;
-    int textureID;
+    BLOC_ID blockID;
 };
-
-struct ChunkCoordHash{
-    std::size_t operator()(const glm::ivec3 coord) const{
-        return std::hash<int>()(coord.x) ^ std::hash<int>()(coord.y) << 1 ^ std::hash<int>()(coord.z) << 2;
-    }
-};
-
 
 class Chunk{
     public:
@@ -22,13 +15,17 @@ class Chunk{
         const static int height = 128;
         const static int depth = 32;
 
+        bool firstGen = false;
+
+        BlocType blocType;
+
         const glm::vec2 textureAtlasCoords[3] = {
             glm::vec2(0.0f, 0.0f),  // Dirt
             glm::vec2(0.0f, 1.0f),  // Grass
-            glm::vec2(1.0f, 0.0f),  // Stone
+            glm::vec2(0.0f, 2.0f),  // Stone
         };
         const int ATLAS_ROWS = 1;
-        const int ATLAS_COLS = 2;
+        const int ATLAS_COLS = 3;
         const int SEED = 1;
         FastNoiseLite noise;
 
@@ -45,37 +42,43 @@ class Chunk{
         ~Chunk();
         void init();
         void render();
+        bool destroyBlock(glm::ivec3 pos);
         
     private:
 
-        const float faceV[6][13] = {
-        // LEFT
-        { 0.0f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 1.0f,   0.0f, 1.0f, 0.0f, 0.6f },
-        // RIGHT
-        { 1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f, 0.0f, 0.6f },
-        // UP
-        { 0.0f, 1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f, 1.0f },
-        // DOWN
-        { 0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   0.0f, 0.0f, 1.0f, 0.4f },
-        // FACE
-        { 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f, 0.8f },
-        // BACK
-        { 0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f, 0.0f, 0.8f },
-        };
+        const float faceV[2][6][13] = 
+        {
+        {
+            // LEFT
+            { 0.0f, 1.0f, 1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,       0.6f },
+            // RIGHT    
+            { 1.0f, 1.0f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f, 1.0f,   1.0f, 0.0f, 0.0f,     0.6f },
+            // UP   
+            { 1.0f, 1.0f, 1.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f, 1.0f,     1.0f },
+            // DOWN 
+            { 0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, 1.0f,   0.0f, 0.0f, 1.0f,     0.4f },
+            // FACE 
+            { 1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f,     0.8f },
+            // BACK 
+            { 0.0f, 1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f, 0.0f,     0.8f },
+        },
+        {
+            //
+            {0.1464f, 1.0f, 0.8536f, 0.1464f, 0.0f, 0.8536f, 0.8536f, 0.0f, 0.1464f, 0.8536f, 1.0f, 0.1464f,   1.0f},
 
-        float shading_values[6][4] = {
-            0.6, 0.6, 0.6, 0.6,
-            0.6, 0.6, 0.6, 0.6,
-            1.0, 1.0, 1.0, 1.0,
-            0.4, 0.4, 0.4, 0.4,
-            0.8, 0.8, 0.8, 0.8,
-	        0.8, 0.8, 0.8, 0.8,
+            {0.1464f, 1.0f, 0.1464f, 0.1464f, 0.0f, 0.1464f, 0.8536f, 0.0f, 0.8536f, 0.8536f, 1.0f, 0.8536f,   1.0f},
+
+            {0.8536f, 1.0f, 0.1464f, 0.8536f, 0.0f, 0.1464f, 0.1464f, 0.0f, 0.8536f, 0.1464f, 1.0f, 0.8536f,   1.0f},
+
+            {0.8536f, 1.0f, 0.8536f, 0.8536f, 0.0f, 0.8536f, 0.1464f, 0.0f, 0.1464f, 0.1464f, 1.0f, 0.1464f,   1.0f}
+        }
         };
 
         GLuint VAO, VBO, EBO;   
-        void addMeshFace(int x, int y, int z, int textureID, SIDE f);
+        void addMeshFace(int x, int y, int z, int textureID, SIDE f, MODEL m);
         void generateMesh();
         void updateBuffer();
+        
 
 
 };

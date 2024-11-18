@@ -1,9 +1,9 @@
 #include "World.h"
 
 World::World(){
-    renderDistance = 10;
+    renderDistance = 5;
     init();
-    texManager.loadTexture( "grass", "res/waterngrass.png", "");
+    texManager.loadTexture( "grass", "res/grassBlock.png", "");
     
 }
 
@@ -19,6 +19,8 @@ World::~World(){
 
 void World::init(){
     player = new Player();
+    World::chunkGenerationUpdate();
+
     // for(int i = 0; i < 20; i++){
     //     for (int j = 0; j < 20; j++){
     //         blocs.push_back(new Bloc(glm::vec3(i, 0.0f, j), &texManager));
@@ -29,7 +31,6 @@ void World::init(){
     //  blocs.push_back(new Bloc(glm::vec3(0.0f, 0.0f, 1.0f)));
     //  blocs.push_back(new Bloc(glm::vec3(1.0f, 0.0f, 1.0f)));
     // chunk = new Chunk(glm::vec3(0.0f, 0.0f, 0.0f));
-
 
 
 }
@@ -49,7 +50,8 @@ void World::chunkGenerationUpdate(){
         }
     }
     for (auto it = loadedChunk.begin(); it != loadedChunk.end(); ) {
-        if (glm::distance(glm::vec3(it->second->position.x / Chunk::width, 0, it->second->position.z / Chunk::depth), playerPos) >= renderDistance + 2) {
+        if (glm::distance(glm::vec3(it->second->position.x / Chunk::width,
+         0, it->second->position.z / Chunk::depth), playerPos) >= renderDistance + 2) {
                 delete it->second;
                 it = loadedChunk.erase(it);
         } else {
@@ -68,10 +70,40 @@ void World::render(){
     // for(auto &bloc : blocs){
     //     bloc->render();
     // }
+    GLenum err;
+    while ((err = glGetError()) != GL_NO_ERROR) {
+    std::cerr << "OpenGL error: " << err << std::endl;
+    }
+}
 
+voxel World::getBlocAt(glm::vec3 pos, const std::unordered_map<glm::ivec3, Chunk*, ChunkCoordHash> loadedChunk) {
+    glm::ivec3 chunkKey(
+        static_cast<int>(std::floor(pos.x / Chunk::width)),
+        static_cast<int>(std::floor(pos.y / Chunk::height)),
+        static_cast<int>(std::floor(pos.z / Chunk::depth))
+    );
+
+    // Ensure the chunk exists
+    auto it = loadedChunk.find(chunkKey);
+    if (it == loadedChunk.end()) {
+        throw std::out_of_range("Chunk does not exist at the specified position");
+    }
+    Chunk* chunk = it->second;
+
+    // Calculate block indices
+    int x = static_cast<int>(std::floor(pos.x)) % Chunk::width;
+    int y = static_cast<int>(std::floor(pos.y)) % Chunk::height;
+    int z = static_cast<int>(std::floor(pos.z)) % Chunk::depth;
+
+    // Handle negative indices
+    if (x < 0) x += Chunk::width;
+    if (y < 0) y += Chunk::height;
+    if (z < 0) z += Chunk::depth;
+
+    return chunk->blocks[x][y][z];
 }
 
 void World::update(){
-    chunkGenerationUpdate();
-    player->update(blocs);
+    World::chunkGenerationUpdate();
+    player->update(loadedChunk);
 }

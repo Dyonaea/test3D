@@ -19,6 +19,7 @@ class World{
         void render();
         void update();
         void chunkGenerationUpdate();
+        static voxel getBlocAt(glm::vec3 pos, std::unordered_map<glm::ivec3, Chunk*, ChunkCoordHash> loadedChunk);
 
     private:
         Player* player;

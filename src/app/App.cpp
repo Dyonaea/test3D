@@ -32,16 +32,13 @@ void App::initWindow(){
     glfwFocusWindow(window);
     
     glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
+
+    glDisable(GL_MULTISAMPLE); 
     // glCullFace(GL_BACK);
     // glFrontFace(GL_CCW);
     
 
-    
-    // glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-   
-
-    
 }
 
 
